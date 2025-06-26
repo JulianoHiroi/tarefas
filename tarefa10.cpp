@@ -208,13 +208,15 @@ std::vector<glm::vec2> sutherlandHodgman(const std::vector<glm::vec2>& polygon, 
         glm::vec2 S = input.back();
 
         for (const glm::vec2& E : input) {
-            if (inside(E, edge)) {
-                if (!inside(S, edge)) {
-                    output.push_back(intersection(S, E, edge));
-                }
-                output.push_back(E);
-            } else if (inside(S, edge)) {
+            if ( !inside(S, edge) && inside(E, edge)) {
+                output.push_back(intersection(S, E, edge));                
+            } else if (inside(S, edge) && inside(E, edge) ) {
+                output.push_back(S);
+            }else if (inside(S, edge) && !inside(E, edge)){
+                output.push_back(S);
                 output.push_back(intersection(S, E, edge));
+            } else if (!inside(S, edge) && !inside(E, edge)) {
+                // Do nothing, both points are outside
             }
             S = E;
         }

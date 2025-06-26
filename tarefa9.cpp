@@ -28,20 +28,18 @@ unsigned int texture;
 const char *vertex_code = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColor;
+layout (location = 1) in vec3 normal;
 layout (location = 2) in vec2 aTexCoord;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-out vec3 ourColor;
 out vec2 TexCoord;
 
 void main()
 {
     gl_Position = projection * view * model * vec4(aPos, 1.0);
-    ourColor = aColor;
     TexCoord = aTexCoord;
 }
 )";
@@ -51,7 +49,6 @@ const char *fragment_code = R"(
 #version 330 core
 out vec4 FragColor;
 
-in vec3 ourColor;
 in vec2 TexCoord;
 
 uniform sampler2D ourTexture;
@@ -186,13 +183,13 @@ void initData()
 
     // Seta os parâmetros da textura
 
-    //Repetição da textura
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        //Repetição da textura
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Configura a repetição da textura no eixo S
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); // Configura a repetição da textura no eixo T
 
-    // Filtro de minificação e magnificação
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // Filtro de minificação e magnificação
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); // Defini como a textura será minificada, no caso com o minimo filtro linear e mipmap
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // Defini como a textura será magnificada, no caso com o filtro linear
 
     // Carrega a textura 
     int width, height, nrChannels;
@@ -201,7 +198,7 @@ void initData()
     {
         GLenum format = nrChannels == 4 ? GL_RGBA : GL_RGB;
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        glGenerateMipmap(GL_TEXTURE_2D); // Gera os mipmaps da textura
     }
     else
     {
